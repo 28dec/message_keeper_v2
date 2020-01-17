@@ -19,25 +19,31 @@ client = None
 
 class Keeper(Client):
 	def load_user_name_by_id(self, uid):
+		print("load user name by id: {}".format(uid))
 		user_name = db.loda('ids', uid)
 		if user_name is None:
+			print("uid {} not found in database, fetching from facebook...".format(uid))
 			user_name = uid
-			await_users = self.fetchUserInfo()
+			await_users = self.fetchUserInfo(uid)
 			users = list(await_users.values())
 			for user in users:
 				user_name = user.name
 				db.seva('ids', user.id, user.name)
+		print("username -> {}".format(user_name))
 		return user_name
 
 	def load_group_name_by_id(self, gid):
+		print("load group name by id: {}".format(gid))
 		group_name = db.loda('ids', gid)
 		if group_name is None:
+			print("group id {} not found in database, fetching from facebook...".format(gid))
 			group_name = gid
-			await_groups = self.fetchGroupInfo()
+			await_groups = self.fetchGroupInfo(gid)
 			groups = list(await_groups.values())
 			for group in groups:
 				group_name = group.name + \
 					" - {} participants".format(len(group.participants))
+		print("group name -> {}".format(group_name))
 		return group_name
 
 
