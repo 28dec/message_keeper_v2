@@ -7,6 +7,7 @@ import os
 import pickle
 import requests
 import time
+import json
 import codecs  # https://stackoverflow.com/questions/30469575/how-to-pickle-and-unpickle-to-portable-string-in-python-3
 import DB
 
@@ -115,11 +116,11 @@ def start():
 	print("Logging in...")
 	session = None
 	if os.path.isfile('fb_session'):
-		with open('fb_session', 'rb') as f:
-			session = pickle.load(f)
+		with open('fb_session', 'r') as f:
+			session = json.load(f)
 	client = Keeper(input("facebook username: "), getpass("facebook password: "), session_cookies = session)
-	with open('fb_session', 'wb') as f:
-		pickle.dump(client.getSession(), f)
+	with open('fb_session', 'w') as f:
+		json.dump(client.getSession(), f)
 	time.sleep(1)
 	print("Hello, i'm MessageKeeper, i'm listening...")
 	client.listen()
